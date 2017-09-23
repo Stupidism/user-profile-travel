@@ -82,5 +82,14 @@ export default function() {
       "fromAddress": "万科金色城市2期悦庭(北蔡镇御水路150弄万科金色城市二期)",
       "toAddress": "虹桥国际机场T2",
     }],
+    pointsDetails: [{
+      balance: 888,
+    }, {
+      balance: 1000,
+    }, {
+      balance: 178,
+    }, {
+      balance: 222,
+    }]
   };
 }

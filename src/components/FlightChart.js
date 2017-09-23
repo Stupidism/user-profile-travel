@@ -4,6 +4,7 @@ import { compose, withHandlers } from 'recompose';
 
 import ReactEcharts from 'echarts-for-react';
 import 'echarts/map/js/china.js';
+import 'echarts-liquidfill';
 
 import getCoordinatesByCityName from '../utils/getCoordinatesByCityName';
 import { planePath, trainPath } from '../constants';
@@ -106,8 +107,76 @@ const generateSeries = (name, travels, index) => {
   }]
 };
 
-const getOption = ({ flights, trains }) => () => {
-  let series = [];
+const getOption = ({ flights, trains, pointsDetails }) => () => {
+  let series = [{
+    min:0,
+    max:5000,
+    splitNumber: 5,
+    axisLabel: {            // 坐标轴小标记
+      textStyle: {       // 属性lineStyle控制线条样式
+        fontWeight: 'bolder',
+        color: '#fff',
+        shadowColor : '#fff', //默认透明
+        shadowBlur: 10
+      }
+    },
+    axisTick: {            // 坐标轴小标记
+      length :15,        // 属性length控制线长
+      lineStyle: {       // 属性lineStyle控制线条样式
+        color: 'auto',
+        shadowColor : '#fff', //默认透明
+        shadowBlur: 10
+      }
+    },
+    splitLine: {           // 分隔线
+      length :25,         // 属性length控制线长
+      lineStyle: {       // 属性lineStyle（详见lineStyle）控制线条样式
+        width:3,
+        color: '#fff',
+        shadowColor : '#fff', //默认透明
+        shadowBlur: 10
+      }
+    },
+    pointer: {           // 分隔线
+      shadowColor : '#fff', //默认透明
+      shadowBlur: 5
+    },
+    title : {
+      textStyle: {       // 其余属性默认使用全局文本样式，详见TEXTSTYLE
+        fontWeight: 'bolder',
+        fontSize: 20,
+        color: '#fff',
+        shadowColor : '#fff', //默认透明
+        shadowBlur: 10
+      }
+    },
+    detail : {
+      backgroundColor: 'rgba(30,144,255,0.8)',
+      borderWidth: 1,
+      borderColor: '#fff',
+      shadowColor : '#fff', //默认透明
+      shadowBlur: 5,
+      offsetCenter: [0, '50%'],       // x, y，单位px
+      textStyle: {       // 其余属性默认使用全局文本样式，详见TEXTSTYLE
+        fontWeight: 'bolder',
+        color: '#fff'
+      }
+    },
+    name: '用户积分',
+    type: 'gauge',
+    center: [180, 650],
+    radius: 150,
+    axisLine: {
+      lineStyle: {
+        color: [[0.09, 'lime'],[0.82, '#1e90ff'],[1, '#ff4500']],
+        width: 3,
+        shadowColor : '#fff', //默认透明
+        shadowBlur: 10
+      }
+    },
+    data: [{value: _.sum(_.map(pointsDetails, 'balance')), name: '积分', label: { normal: { color: 'white' } }}]
+  }];
+  console.log(pointsDetails, _.map(pointsDetails, 'balance'));
   series = series.concat(generateSeries('飞机', flights, 0));
   series = series.concat(generateSeries('火车', trains, 1));
 

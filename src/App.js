@@ -18,6 +18,7 @@ class App extends Component {
     flights: [],
     trains: [],
     drives: [],
+    pointsDetails: [],
     authenticated: false,
     dataFetching: false,
     dataFetched: false,
@@ -46,14 +47,15 @@ class App extends Component {
     this.setState({ ...fakeData, dataFetching: true });
     getData('/api/flights', res => this.setState({ flights: res ? res.flights : fakeData.flights }));
     getData('/api/trains', res => this.setState({ trains: res ? res.trains : fakeData.trains }));
+    getData('/api/pointsDetails', res => this.setState({ pointsDetails: res ? res.pointsDetails : fakeData.pointsDetails }));
   }
 
   renderCharts() {
-    const { tags, flights, trains, rides } = this.state;
+    const { tags, flights, trains, rides, pointsDetails } = this.state;
 
     return (
       <WingBlank>
-        <FlightChart flights={flights} trains={trains} />
+        <FlightChart flights={flights} trains={trains} pointsDetails={pointsDetails} />
         <WhiteSpace />
         <CityChart city="上海" rides={rides} />
         <WhiteSpace />
