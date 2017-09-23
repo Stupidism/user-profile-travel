@@ -37,8 +37,12 @@ export default function() {
     }
   });
 
+  const scores = ['总里程', '出行频率', '平均花费', '总花费', '出行范围']
+    .map(name => ({ name, value: Math.floor(Math.random() * 6) + 2 }));
+
   return {
     tags,
+    scores,
     flights: [{
       "departureCity": "北京",
       "arrivalCity": "上海",

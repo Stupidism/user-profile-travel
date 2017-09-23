@@ -18,7 +18,7 @@ const RelationGraph = ({ getOption }) => (
 const getOption = ({ level, scores }) => () => {
   return {
     title: {
-      text: `用户评级-${level}`
+      text: `用户评分`
     },
     tooltip: {},
     radar: {
@@ -31,7 +31,8 @@ const getOption = ({ level, scores }) => () => {
           padding: [3, 5]
         }
       },
-      indicator: scores.map(({ name }) => ({ name, max: 5 })),
+      splitNumber: 8,
+      indicator: scores.map(({ name }) => ({ name, max: 8 })),
     },
     series: [{
       type: 'radar',

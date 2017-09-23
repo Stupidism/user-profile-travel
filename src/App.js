@@ -17,7 +17,7 @@ class App extends Component {
     rides: [],
     flights: [],
     trains: [],
-    drives: [],
+    scores: [],
     pointsDetails: [],
     authenticated: false,
     dataFetching: false,
@@ -51,7 +51,7 @@ class App extends Component {
   }
 
   renderCharts() {
-    const { tags, flights, trains, rides, pointsDetails } = this.state;
+    const { tags, flights, trains, rides, pointsDetails, scores } = this.state;
 
     return (
       <WingBlank>
@@ -60,6 +60,7 @@ class App extends Component {
         <CityChart city="上海" rides={rides} />
         <WhiteSpace />
         <WordCloud topics={tags} />
+        <ScoreRadar scores={scores} />
         <p className="App-intro">
           出行轨迹用户画像-DoraHacks-董先sēng倾情奉献
         </p>
@@ -100,7 +101,7 @@ class App extends Component {
           我的出行知多少?
         </NavBar>
         <WhiteSpace />
-        {this.renderContent()}
+        {authenticated ? this.renderContent() : <Login onAuthenticated={this.onAuthenticated} />}
       </div>
     );
   }
