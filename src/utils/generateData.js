@@ -1,5 +1,3 @@
-import _ from 'lodash';
-
 import mobikeRides from './mobike.json';
 
 export default function() {

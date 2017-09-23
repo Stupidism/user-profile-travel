@@ -1,7 +1,6 @@
 import 'echarts/extension/bmap/bmap';
 
 function getDistance(lat1, lng1, lat2, lng2) {
-  var dis = 0;
   var radLat1 = toRadians(lat1);
   var radLat2 = toRadians(lat2);
   var deltaLat = radLat1 - radLat2;

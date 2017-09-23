@@ -1,5 +1,4 @@
 import React from 'react';
-import _ from 'lodash';
 import { compose, withHandlers } from 'recompose';
 
 import ReactEcharts from 'echarts-for-react';

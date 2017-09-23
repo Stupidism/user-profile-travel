@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
-import { compose, withHandlers, withStateHandlers } from 'recompose';
-import { List, InputItem, WhiteSpace } from 'antd-mobile';
+import { compose, withStateHandlers } from 'recompose';
+import { List } from 'antd-mobile';
 import { createForm } from 'rc-form';
 
 import getData from '../utils/getData';
@@ -45,7 +45,7 @@ class Login extends Component {
   }
 
   render() {
-    const { form: { getFieldProps }, authenticating, error, qrcode } = this.props;
+    const { qrcode } = this.props;
     return (
       <div style={{ display: 'flex', backgroundColor: 'white' }}>
         <List renderHeader={() => '请扫描微信二维码登录携程账号'} style={{ flex: 1 }}>
