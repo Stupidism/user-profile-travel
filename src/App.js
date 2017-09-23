@@ -47,11 +47,11 @@ class App extends Component {
   }
 
   renderCharts() {
-    const { tags, flights } = this.state;
+    const { tags, flights, trains } = this.state;
 
     return (
       <WingBlank>
-        <FlightChart flights={flights} />
+        <FlightChart flights={flights} trains={trains} />
         <WordCloud topics={tags} />
         <p className="App-intro">
           出行轨迹用户画像-DoraHacks-董先sēng倾情奉献

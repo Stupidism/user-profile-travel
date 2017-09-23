@@ -24,11 +24,43 @@ export default function() {
   return {
     tags,
     flights: [{
-      "platform": "携程",
+      "departureCity": "北京",
+      "arrivalCity": "上海",
+    }, {
+      "departureCity": "上海",
+      "arrivalCity": "北京",
+    }, {
+      "departureCity": "上海",
+      "arrivalCity": "兰州",
+    }, {
+      "departureCity": "兰州",
+      "arrivalCity": "上海",
+    }, {
+      "departureCity": "深圳",
+      "arrivalCity": "上海",
+    }, {
+      "departureCity": "上海",
+      "arrivalCity": "深圳",
+    }],
+    trains: [{
+      "platform": "12306",
       "type": "FlightDomestic",
       "departAt": "2017-09-24 17:30:00",
       "arriveAt": "2017-09-24 19:40:00",
+      "departureCity": "上海",
+      "arrivalCity": "南京",
+    }, {
       "departureCity": "北京",
+      "arrivalCity": "上海",
+    }, {
+      "departureCity": "上海",
+      "arrivalCity": "北京",
+    }, {
+      "platform": "12306",
+      "type": "FlightDomestic",
+      "departAt": "2017-09-24 17:30:00",
+      "arriveAt": "2017-09-24 19:40:00",
+      "departureCity": "南京",
       "arrivalCity": "上海",
     }],
     rides: [{

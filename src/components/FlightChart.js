@@ -18,11 +18,12 @@ const RelationGraph = ({ getOption }) => (
   />
 );
 
-const color = '#ffa022';
+const colors = ['#ffa022', '#46bee9'];
+const curveness = [0.2, 0.1];
 
-const getOption = ({ flights }) => () => {
+const generateSeries = (name, travels, index) => {
   let cities = [];
-  const data = flights.map(({ departureCity, arrivalCity }) => {
+  const data = travels.map(({ departureCity, arrivalCity }) => {
     cities.push(departureCity);
     cities.push(arrivalCity);
 
@@ -37,9 +38,8 @@ const getOption = ({ flights }) => () => {
   });
 
   cities = _.uniq(cities);
-
-  const series = [{
-    name: '飞机',
+  return [{
+    name,
     type: 'lines',
     zlevel: 1,
     effect: {
@@ -51,34 +51,34 @@ const getOption = ({ flights }) => () => {
     },
     lineStyle: {
       normal: {
-        color,
+        color: colors[index],
         width: 0,
-        curveness: 0.2
+        curveness: curveness[index],
       }
     },
     data,
   }, {
-    name: '飞机',
+    name,
     type: 'lines',
     zlevel: 2,
     effect: {
       show: true,
       period: 6,
       trailLength: 0,
-      symbol: planePath,
+      symbol: name === '飞机' ? planePath : trainPath,
       symbolSize: 15
     },
     lineStyle: {
       normal: {
-        color,
+        color: colors[index],
         width: 1,
         opacity: 0.6,
-        curveness: 0.2
+        curveness: curveness[index],
       }
     },
     data,
   }, {
-    name: '飞机',
+    name,
     type: 'effectScatter',
     coordinateSystem: 'geo',
     zlevel: 2,
@@ -94,7 +94,7 @@ const getOption = ({ flights }) => () => {
     },
     itemStyle: {
       normal: {
-        color
+        color: colors[index]
       }
     },
     data: cities.map(function (name) {
@@ -103,7 +103,15 @@ const getOption = ({ flights }) => () => {
         value: getCoordinatesByCityName(name),
       };
     })
-  }];
+  }]
+};
+
+const getOption = ({ flights, trains }) => () => {
+  let series = [];
+  series = series.concat(generateSeries('飞机', flights, 0));
+  series = series.concat(generateSeries('火车', trains, 1));
+
+  console.log(series);
 
   return {
     title: {
@@ -117,7 +125,7 @@ const getOption = ({ flights }) => () => {
       orient: 'vertical',
       top: 'bottom',
       left: 'right',
-      data:['飞机'],
+      data:['飞机', '火车'],
       textStyle: {
         color: '#fff'
       },
