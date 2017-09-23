@@ -2,7 +2,6 @@
   "name": "user-profile-maimai",
   "version": "0.1.0",
   "private": true,
-  "homepage": "https://stupidism.github.io/user-profile-maimai",
   "dependencies": {
     "antd-mobile": "^1.6.7",
     "d3-cloud": "^1.2.4",
