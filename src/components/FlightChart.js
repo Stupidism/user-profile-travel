@@ -176,7 +176,6 @@ const getOption = ({ flights, trains, pointsDetails }) => () => {
     },
     data: [{value: _.sum(_.map(pointsDetails, 'balance')), name: '积分', label: { normal: { color: 'white' } }}]
   }];
-  console.log(pointsDetails, _.map(pointsDetails, 'balance'));
   series = series.concat(generateSeries('飞机', flights, 0));
   series = series.concat(generateSeries('火车', trains, 1));
 

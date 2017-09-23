@@ -1,72 +1,90 @@
-import React from 'react';
+import React, { Component } from 'react';
 import { compose, withHandlers, withStateHandlers } from 'recompose';
-import { Button, List, InputItem, WhiteSpace } from 'antd-mobile';
+import { List, InputItem, WhiteSpace } from 'antd-mobile';
 import { createForm } from 'rc-form';
 
-const Login = ({ form: { getFieldProps }, onLogin, authenticating, error }) => (
-  <form>
-    <List renderHeader={() => '用携程账号登录'} style={{ width: '100%' }}>
-      <InputItem
-        {...getFieldProps('username')}
-        clear
-        error={error}
-        placeholder="用户名/手机号"
-        autoFocus
-      />
-      <InputItem
-        {...getFieldProps('password')}
-        clear
-        placeholder="密码"
-        autoFocus
-        error={error}
-        type="password"
-      />
-    </List>
-    <WhiteSpace />
-    {error ? <div style={{ color: 'red' }}>{error}</div> : null}
-    <WhiteSpace />
-    <Button type="primary" size="small" disabled={authenticating} onClick={onLogin}>登录</Button>
-  </form>
-);
+import getData from '../utils/getData';
 
-const onLogin = ({ form: { validateFields }, startAuth, endAuth, setError, onAuthenticated }) => () => {
-  validateFields((error, credentials) => {
-    startAuth();
-
-    const body = Object.keys(credentials).map((key) => {
-      return encodeURIComponent(key) + '=' + encodeURIComponent(credentials[key]);
-    }).join('&');
-
-    fetch('/login', {
+class Login extends Component {
+  componentDidMount() {
+    fetch('/api/logins', {
       method: 'POST',
       headers: {
-        'Content-Type': 'application/x-www-form-urlencoded'
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
       },
-      body,
-    }).then((res) => {
-      endAuth();
-      if (res.status >= 200 && res.status < 300) {
-        onAuthenticated();
-      } else {
-        onAuthenticated();
-      }
-    }, error => {
-      console.info(error);
-      endAuth();
-      setError('用户名或密码错误!');
+      body: '{}'
     });
-  });
-};
+
+    this.keepAskingUntilQrcodeIsFetched();
+  }
+
+  keepAskingUntilQrcodeIsFetched() {
+    this.qrCodeInterval = setInterval(() => {
+      getData('/api/wechatQRCodes', res => {
+        if (res.wechatQRCodes.length) {
+          this.props.setQrcode(res.wechatQRCodes[0].imgUrl);
+          this.keepAskingUntilAuthenticated();
+          clearInterval(this.qrCodeInterval);
+          this.qrCodeInterval = null;
+        }
+      });
+    }, 1000);
+  }
+
+  keepAskingUntilAuthenticated() {
+    this.authInterval = setInterval(() => {
+      getData('/api/wechatQRCodes', (res) => {
+        if(!res.wechatQRCodes.length) {
+          this.props.onQrcodeScanned();
+          clearInterval(this.authInterval);
+          this.authInterval = null;
+        }
+      })
+    }, 1000);
+  }
+
+  render() {
+    const { form: { getFieldProps }, authenticating, error, qrcode } = this.props;
+    return (
+      <div style={{ display: 'flex', backgroundColor: 'white' }}>
+        <List renderHeader={() => '请扫描微信二维码登录携程账号'} style={{ flex: 1 }}>
+          <img src={qrcode} alt="loading..."/>
+          <div style={{ color: 'orange' }}>如果您的携程账号尚未绑定微信,请自行绑定好再使用本应用.</div>
+        </List>
+      </div>
+    );
+  }
+}
+
+// <List renderHeader={() => '请输入12306的用户名密码以继续'} style={{ flex: 1 }}>
+//   <InputItem
+//     {...getFieldProps('username')}
+//     clear
+//     error={error}
+//     placeholder="用户名/手机号"
+//     autoFocus
+//   />
+//   <InputItem
+//     {...getFieldProps('password')}
+//     clear
+//     placeholder="密码"
+//     autoFocus
+//     error={error}
+//     type="password"
+//   />
+// </List>
 
 export default compose(
   createForm(),
   withStateHandlers({
     authenticating: false,
     error: undefined,
+    qrcode: undefined,
   }, {
     startAuth: () => () => ({ authenticating: true }),
     endAuth: () => () => ({ authenticating: false }),
     setError: () => (error) => ({ error }),
+    setQrcode: () => qrcode => ({ qrcode }),
   }),
-  withHandlers({ onLogin }),
 )(Login);

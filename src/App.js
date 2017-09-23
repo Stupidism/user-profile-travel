@@ -19,7 +19,10 @@ class App extends Component {
     trains: [],
     scores: [],
     pointsDetails: [],
+    authenticating: false,
     authenticated: false,
+    dataScrawling: false,
+    dataScrawed: false,
     dataFetching: false,
     dataFetched: false,
   };
@@ -30,16 +33,26 @@ class App extends Component {
     this.fetchData = this.fetchData.bind(this);
   }
 
-  componentDidMount() {
-    if (!this.state.dataFetched && !this.state.dataFetching) {
+  componentDidUpdate() {
+    if (!this.interval && this.state.dataScrawling) {
+      this.keepAskingUntilDataIsScawled();
+    }
+
+    if (this.state.authenticated && this.state.dataScrawled && !this.state.dataFetching && !this.state.dataFetched) {
       this.fetchData();
     }
   }
 
-  componentDidUpdate() {
-    if (!this.state.dataFetched && !this.state.dataFetching) {
-      this.fetchData();
-    }
+  keepAskingUntilDataIsScawled() {
+    this.interval = setInterval(() => {
+      getData('/api/logins', (res) => {
+        if(!res.logins.length) {
+          this.setState({ dataScrawled: true, dataScrawling: false });
+          clearInterval(this.interval);
+          this.interval = null;
+        }
+      })
+    }, 1000);
   }
 
   fetchData() {
@@ -69,7 +82,11 @@ class App extends Component {
   }
 
   renderContent() {
-    const { error } = this.state;
+    const { error, dataScrawling } = this.state;
+
+    if (dataScrawling) {
+      return '爬虫正在努力工作,请耐心等待...';
+    }
 
     if (error) {
       return (
@@ -85,7 +102,7 @@ class App extends Component {
   }
 
   onAuthenticated() {
-    this.setState({ authenticated: true });
+    this.setState({ authenticated: true, dataScrawling: true });
   }
 
   render() {
@@ -101,7 +118,7 @@ class App extends Component {
           我的出行知多少?
         </NavBar>
         <WhiteSpace />
-        {authenticated ? this.renderContent() : <Login onAuthenticated={this.onAuthenticated} />}
+        {authenticated ? this.renderContent() : <Login onQrcodeScanned={this.onAuthenticated} />}
       </div>
     );
   }
