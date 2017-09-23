@@ -41,6 +41,12 @@ export default function() {
     }, {
       "departureCity": "上海",
       "arrivalCity": "深圳",
+    }, {
+      "departureCity": "三亚",
+      "arrivalCity": "上海",
+    }, {
+      "departureCity": "上海",
+      "arrivalCity": "海口",
     }],
     trains: [{
       "platform": "12306",
