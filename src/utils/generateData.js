@@ -4,7 +4,21 @@ import mobikeRides from './mobike.json';
 
 export default function() {
 
-  const tags = _.fill(Array(50), 0).map((v, index) => {
+  const tags = ['东方航空',
+    '国航',
+    '北京',
+    '上海',
+    '深圳',
+    '经济舱',
+    '国内',
+    '普通会员',
+    '积分新人',
+    '去过6个城市',
+    '出行达人',
+    '活跃分子',
+    '90后',
+    'IT行业',
+    '性别男'].map((name, index) => {
     const positive = Math.round(Math.random() * 500);
     const negative = Math.round(Math.random() * 300);
     const neutral = Math.round(Math.random() * 200);
@@ -12,7 +26,7 @@ export default function() {
 
     return {
       id: index,
-      label: `话题${index}`,
+      label: name,
       volume,
       sentimentScore: (positive * 3 + neutral - negative) / volume * 100,
       sentiment: {
