@@ -1,5 +1,7 @@
 import _ from 'lodash';
 
+import mobikeRides from './mobike.json';
+
 export default function() {
 
   const tags = _.fill(Array(50), 0).map((v, index) => {
@@ -69,18 +71,10 @@ export default function() {
       "departureCity": "南京",
       "arrivalCity": "上海",
     }],
-    rides: [{
-      "platform": "摩拜",
-      "time": 1500548372200,
-      "points": [
-        [121.604366,31.179999],
-        [121.604325,31.180024],
-        [121.60425,31.180005],
-        [121.604202,31.179984],
-        [121.604154,31.179959],
-        [121.604086,31.179941],
-      ]
-    }],
+    rides: mobikeRides.map(ride => ({
+      time: ride.data.time,
+      points: ride.data.points.split('#').map(point => point.split(',')),
+    })),
     drives: [{
       "platform": "携程",
       "type": "Car",

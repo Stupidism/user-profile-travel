@@ -111,12 +111,12 @@ const getOption = ({ flights, trains }) => () => {
   series = series.concat(generateSeries('飞机', flights, 0));
   series = series.concat(generateSeries('火车', trains, 1));
 
-  console.log(series);
-
   return {
     title: {
       text: '国内航程轨迹',
-      left: 'center'
+      textStyle: {
+        color: 'white',
+      },
     },
     tooltip: {
       trigger: 'item'

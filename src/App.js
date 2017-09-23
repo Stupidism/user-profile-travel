@@ -5,6 +5,7 @@ import logo from './logo-maimai.png';
 import './App.css';
 import generateFakeData from './utils/generateData';
 import FlightChart from './components/FlightChart';
+import CityChart from './components/CityChart';
 import ScoreRadar from './components/ScoreRadar';
 import Login from './components/Login';
 import WordCloud from './components/WordCloud';
@@ -44,14 +45,18 @@ class App extends Component {
     const fakeData = generateFakeData();
     this.setState({ ...fakeData, dataFetching: true });
     getData('/api/flights', res => this.setState({ flights: res ? res.flights : fakeData.flights }));
+    getData('/api/trains', res => this.setState({ trains: res ? res.trains : fakeData.trains }));
   }
 
   renderCharts() {
-    const { tags, flights, trains } = this.state;
+    const { tags, flights, trains, rides } = this.state;
 
     return (
       <WingBlank>
         <FlightChart flights={flights} trains={trains} />
+        <WhiteSpace />
+        <CityChart city="上海" rides={rides} />
+        <WhiteSpace />
         <WordCloud topics={tags} />
         <p className="App-intro">
           出行轨迹用户画像-DoraHacks-董先sēng倾情奉献
