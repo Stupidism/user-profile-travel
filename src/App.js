@@ -8,19 +8,18 @@ import FlightChart from './components/FlightChart';
 import ScoreRadar from './components/ScoreRadar';
 import Login from './components/Login';
 import WordCloud from './components/WordCloud';
+import getData from './utils/getData';
 
 class App extends Component {
   state = {
+    tags: [],
+    rides: [],
+    flights: [],
+    trains: [],
+    drives: [],
     authenticated: false,
     dataFetching: false,
     dataFetched: false,
-    data: {
-      tags: [],
-      rides: [],
-      flights: [],
-      trains: [],
-      drives: [],
-    },
   };
 
   constructor() {
@@ -42,30 +41,13 @@ class App extends Component {
   }
 
   fetchData() {
-    this.setState({ dataFetching: true });
-    fetch('/data', {
-      method: 'GET',
-      headers: {
-        'Accept': 'application/json'
-      },
-    }).then(res => {
-      const fakeData = generateFakeData();
-      if (res.status >= 200 && res.status < 300) {
-        res.json().then(data => {
-          this.setState({ data: {
-            ...fakeData,
-            ...data,
-          }, dataFetched: true, dataFetching: false, error: '' });
-        });
-      } else {
-        this.setState({ data: fakeData, dataFetched: true, dataFetching: false, error: '' });
-        // this.setState({ dataFetched: true, error: '获取数据失败', dataFetching: false });
-      }
-    });
+    const fakeData = generateFakeData();
+    this.setState({ ...fakeData, dataFetching: true });
+    getData('/api/flights', res => this.setState({ flights: res ? res.flights : fakeData.flights }));
   }
 
   renderCharts() {
-    const { tags, flights } = this.state.data;
+    const { tags, flights } = this.state;
 
     return (
       <WingBlank>
@@ -79,11 +61,7 @@ class App extends Component {
   }
 
   renderContent() {
-    const { dataFetching, error } = this.state;
-
-    if (dataFetching) {
-      return <span>正在加载数据...</span>;
-    }
+    const { error } = this.state;
 
     if (error) {
       return (
