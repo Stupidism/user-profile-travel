@@ -2,9 +2,12 @@ import React from 'react';
 import { compose, withHandlers } from 'recompose';
 
 import ReactEcharts from 'echarts-for-react';
+import 'echarts/map/js/china.js';
+
+import getCoordinatesByCityName from '../utils/getCoordinatesByCityName';
 
 const RelationGraph = ({ getOption }) => (
-  <div
+  <ReactEcharts
     option={getOption()}
     style={{ height: '800px', width: '100%' }}
     notMerge={true}
@@ -13,38 +16,47 @@ const RelationGraph = ({ getOption }) => (
   />
 );
 
-const getOption = ({ level, scores }) => () => {
+const getOption = ({ level, scores = [] }) => () => {
+
   return {
     title: {
-      text: `用户评级-${level}`
+      text: '国内航程轨迹',
+      left: 'center'
     },
-    tooltip: {},
-    radar: {
-      // shape: 'circle',
-      name: {
-        textStyle: {
-          color: '#fff',
-          backgroundColor: '#999',
-          borderRadius: 3,
-          padding: [3, 5]
-        }
-      },
-      indicator: scores.map(({ name }) => ({ name, max: 5 })),
+    tooltip: {
+      trigger: 'item'
+    },
+    legend: {
+      orient: 'vertical',
+      left: 'left',
+      data:['飞机', '火车'],
+    },
+    toolbox: {
+      show: true,
+      orient: 'vertical',
+      left: 'right',
+      top: 'center',
+      feature: {
+        dataView: {readOnly: false},
+        restore: {},
+        saveAsImage: {}
+      }
     },
     series: [{
-      type: 'radar',
-      // areaStyle: {normal: {}},
-      data : [
-        {
-          value : scores.map(({ value }) => value),
-        }
-      ],
-      areaStyle: {
+      name: '飞机',
+      type: 'map',
+      mapType: 'china',
+      roam: false,
+      label: {
         normal: {
-          opacity: 0.1
-        }
-      }
-    }]
+          show: true
+        },
+        emphasis: {
+          show: true
+        },
+      },
+      data: [],
+    }],
   };
 };
 

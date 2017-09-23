@@ -115,7 +115,7 @@ class App extends Component {
           我的出行知多少?
         </NavBar>
         <WhiteSpace />
-        {authenticated ? this.renderContent() : <Login onAuthenticated={this.onAuthenticated} />}
+        {this.renderContent()}
       </div>
     );
   }
