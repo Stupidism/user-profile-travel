@@ -17,7 +17,10 @@
     "recompose": "^0.25.0"
   },
   "scripts": {
-    "start": "react-app-rewired start",
+    "start": "(npm run start:back &) && (npm run start:crawler &) && (npm run start:front)",
+    "start:front": "react-app-rewired start",
+    "start:back": "java -jar server/outflitter-1.0.0-SNAPSHOT-6.jar",
+    "start:crawler": "python3 crawler/ctrip/main.py",
     "build": "react-app-rewired build",
     "predeploy": "npm run build",
     "deploy": "gh-pages -d build",
